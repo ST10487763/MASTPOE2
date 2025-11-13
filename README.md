@@ -1,22 +1,15 @@
-Changelog of the code:
+> Why do I have a folder named ".expo" in my project?
 
-What was added:
+The ".expo" folder is created when an Expo project is started using "expo start" command.
 
-- Enhanced the header layout by including better spacing and alignment 
-- Included an image of the logo within the application placed next to the heading of the app.
-- Included a reusable header component that combines togther the logo, title and subtitle
+> What do the files contain?
 
-What was changed within the code:
+- "devices.json": contains information about devices that have recently opened this project. This is used to populate the "Development sessions" list in your development builds.
+- "packager-info.json": contains port numbers and process PIDs that are used to serve the application to the mobile device/simulator.
+- "settings.json": contains the server configuration that is used to serve the application manifest.
 
+> Should I commit the ".expo" folder?
 
-- Reduced the logo size for better alignment with the headings 
-- Updated all of the screens to allow the use of the new header component 
-- Improved the visual design of the app by intergrating the use of a new background image
-- A cleaner code structure has been implemented
-- There's a multi-screen navigation: Home, Add Dish and View Menu screens
+No, you should not share the ".expo" folder. It does not contain any information that is relevant for other developers working on the project, it is specific to your machine.
 
-Link to the respository:
-
-https://github.com/ST10487763/MASTPOE2.git
-
-Link to the YouTube video:
+Upon project creation, the ".expo" folder is already added to your ".gitignore" file.

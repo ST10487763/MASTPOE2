@@ -37,6 +37,31 @@ export default function App() {
 
   const courses: Course[] = ['Starter', 'Main', 'Dessert', 'Drink'];
 
+  // Calculate average price
+  const getNumericPrice = (priceString: string): number => {
+    return parseFloat(priceString.replace('R ', ''));
+  };
+
+  const totalAmount = menuItems.reduce((total, item) => {
+    return total + getNumericPrice(item.price);
+  }, 0);
+
+  const averagePrice = menuItems.length > 0 
+    ? totalAmount / menuItems.length 
+    : 0;
+
+  // Calculate average price by course
+  const getAveragePriceByCourse = (course: Course) => {
+    const courseItems = menuItems.filter(item => item.course === course);
+    if (courseItems.length === 0) return 0;
+    
+    const courseTotal = courseItems.reduce((total, item) => {
+      return total + getNumericPrice(item.price);
+    }, 0);
+    
+    return courseTotal / courseItems.length;
+  };
+
   // Filter and search functionality
   const filteredItems = menuItems.filter(item => {
     const matchesCourse = filterCourse === 'All' || item.course === filterCourse;
@@ -61,7 +86,7 @@ export default function App() {
       name: name.trim(),
       description: description.trim(),
       course: selectedCourse,
-      price: `$${parseFloat(price).toFixed(2)}`
+      price: `R ${parseFloat(price).toFixed(2)}`
     };
 
     setMenuItems([...menuItems, newItem]);
@@ -173,6 +198,16 @@ export default function App() {
             {menuItems.filter(item => item.course === 'Drink').length}
           </Text>
           <Text style={styles.statLabel}>Drinks</Text>
+        </View>
+
+        <View style={styles.statCard}>
+          <Text style={styles.statNumber}>R {averagePrice.toFixed(2)}</Text>
+          <Text style={styles.statLabel}>Avg Price</Text>
+        </View>
+
+        <View style={styles.statCard}>
+          <Text style={styles.statNumber}>R {totalAmount.toFixed(2)}</Text>
+          <Text style={styles.statLabel}>Total Value</Text>
         </View>
       </View>
 
@@ -286,12 +321,12 @@ export default function App() {
           ))}
         </View>
 
-        <Text style={styles.label}>Price:</Text>
+        <Text style={styles.label}>Price (Rands):</Text>
         <TextInput
           style={styles.textInput}
           value={price}
           onChangeText={setPrice}
-          placeholder="Enter price"
+          placeholder="Enter price in Rands"
           placeholderTextColor="#888"
           keyboardType="decimal-pad"
         />
@@ -303,7 +338,7 @@ export default function App() {
       
       <View style={styles.summary}>
         <Text style={styles.summaryText}>
-          Total Items: {menuItems.length}
+          Total Items: {menuItems.length} | Avg Price: R {averagePrice.toFixed(2)}
         </Text>
       </View>
     </ScrollView>
@@ -314,8 +349,53 @@ export default function App() {
     <ScrollView showsVerticalScrollIndicator={false}>
       <HeaderWithLogo 
         title="Menu Items "
-        subtitle={`${menuItems.length} dishes in your menu`}
+        subtitle={`${menuItems.length} dishes in your menu - Average Price: R ${averagePrice.toFixed(2)}`}
       />
+
+      {/* Price Statistics */}
+      <View style={styles.averagesContainer}>
+        <View style={styles.averageCard}>
+          <Text style={styles.averageLabel}>Total Menu Value</Text>
+          <Text style={styles.averageValue}>R {totalAmount.toFixed(2)}</Text>
+        </View>
+        <View style={styles.averageCard}>
+          <Text style={styles.averageLabel}>Average Price</Text>
+          <Text style={styles.averageValue}>R {averagePrice.toFixed(2)}</Text>
+        </View>
+        <View style={styles.averageCard}>
+          <Text style={styles.averageLabel}>Total Dishes</Text>
+          <Text style={styles.averageValue}>{menuItems.length}</Text>
+        </View>
+      </View>
+
+      {/* Course-wise Averages */}
+      <View style={styles.courseAveragesContainer}>
+        <Text style={styles.courseAveragesTitle}>Average Prices by Course</Text>
+        <View style={styles.courseAverages}>
+          {courses.map((course) => {
+            const courseAverage = getAveragePriceByCourse(course);
+            const courseCount = menuItems.filter(item => item.course === course).length;
+            
+            return (
+              <View key={course} style={styles.courseAverageItem}>
+                <View style={styles.courseAverageHeader}>
+                  <View style={[
+                    styles.courseDot,
+                    { backgroundColor: getCourseColor(course) }
+                  ]} />
+                  <Text style={styles.courseName}>{course}</Text>
+                </View>
+                <View style={styles.courseAverageDetails}>
+                  <Text style={styles.courseAveragePrice}>
+                    R {courseAverage.toFixed(2)}
+                  </Text>
+                  <Text style={styles.courseCount}>({courseCount} items)</Text>
+                </View>
+              </View>
+            );
+          })}
+        </View>
+      </View>
 
       {/* Search and Filter */}
       <View style={styles.filterContainer}>
@@ -728,6 +808,83 @@ const styles = StyleSheet.create({
     color: '#FF6F61',
   },
   // View Screen Styles
+  averagesContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 18,
+    gap: 10,
+  },
+  averageCard: {
+    flex: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: 10,
+    padding: 12,
+    alignItems: 'center',
+  },
+  averageLabel: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  averageValue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FF6F61',
+    textAlign: 'center',
+  },
+  courseAveragesContainer: {
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: 10,
+    padding: 16,
+    marginBottom: 18,
+  },
+  courseAveragesTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#074734',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  courseAverages: {
+    gap: 8,
+  },
+  courseAverageItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 6,
+  },
+  courseAverageHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flex: 1,
+  },
+  courseDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
+  courseName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#074734',
+  },
+  courseAverageDetails: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  courseAveragePrice: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#FF6F61',
+  },
+  courseCount: {
+    fontSize: 12,
+    color: '#666',
+  },
   filterContainer: {
     backgroundColor: "rgba(238, 171, 206, 0.9)",
     borderRadius: 10,
