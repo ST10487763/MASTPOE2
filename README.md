@@ -1,15 +1,24 @@
-> Why do I have a folder named ".expo" in my project?
+Changelog for Chef Menu Map
 
-The ".expo" folder is created when an Expo project is started using "expo start" command.
+Current features on the application include:
+-	3 Main Screens: Home, Add dish and View Menu
+-	Add dish Screen: Include name of dish, description, price and the choice between the course types 
+-	View Menu Screen: View all the dishes added by the Chef which includes both a filter and search bar 
+-	Price of the dishes: Is available in Rands 
+-	Course Types: They include starter, main, dessert and drinks too
+-	Statistics: Displays the total number of items and counts the total number of courses
+-	Fitler: Shows dishes depending on the course type selected 
 
-> What do the files contain?
+Recent additions to the application
+-	Average price: Shows the average price of all the dishes included
+-	Total Value: Adds all the dish prices together and shows them
+-	Course Averages: Indicated the average price for each course type
+-	Background: Included a background image to the application to make it more professional 
+-	Added a logo to the application and displayed it next to the title and subtitle 
 
-- "devices.json": contains information about devices that have recently opened this project. This is used to populate the "Development sessions" list in your development builds.
-- "packager-info.json": contains port numbers and process PIDs that are used to serve the application to the mobile device/simulator.
-- "settings.json": contains the server configuration that is used to serve the application manifest.
+Link of the Youtube Video:
+https://youtu.be/zOCYKjXc8EE
 
-> Should I commit the ".expo" folder?
+Link to the repository 
+https://github.com/ST10487763/MASTPOE2.git
 
-No, you should not share the ".expo" folder. It does not contain any information that is relevant for other developers working on the project, it is specific to your machine.
-
-Upon project creation, the ".expo" folder is already added to your ".gitignore" file.
